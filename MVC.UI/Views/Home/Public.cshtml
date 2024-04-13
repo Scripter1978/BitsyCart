@@ -1,0 +1,30 @@
+@model ICollection<ProductItem>
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_LayoutProfile";
+}
+
+<div class="cards" id="imx0o">
+@foreach (var item in Model)
+{
+    <a class="btn" href="https://google.com" alt="@item.Uid">
+        <div class="card">
+            <div class="card-header" style="background-image: url(@item.PreviewImage);">
+                <div style="right: 0; bottom: 0;position: absolute; margin: 3px; font-weight: bolder; font-size: larger;">@item.Price</div>
+            </div>
+            <div class="card-body">
+                <div class="card-title">
+                    @item.Title
+                </div>
+                <div class="card-sub-title">
+                    @item.SubTitle
+                </div>
+                <div class="card-desc">
+                    @item.Description
+                </div>
+            </div>
+        </div>
+    </a> 
+}
+</div>

@@ -3,6 +3,7 @@ namespace Infrastructure.Models;
 public class Product :Base
 {
     public ulong ProductId { get; set; }
+    public string Uid { get; set; }
     public string Name { get; set; }
     public string Title { get; set; }
     public string SubTitle { get; set; }
