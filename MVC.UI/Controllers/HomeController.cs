@@ -34,25 +34,46 @@ public class HomeController : Controller
     public IActionResult Public()
     {
         
-        return View( new  List<ProductItem>()
+        return View(new PublicModel()
         {
-            new ProductItem{ PreviewImage = "TEST IMAGE", SubTitle = "Sub Title", Title = "Title", Description = "Description", Uid = "UID", Price = "$99.95"},
-            new ProductItem{ PreviewImage = "TEST IMAGE2", SubTitle = "Sub Title2", Title = "Title2", Description = "Description2", Uid = "UID2", Price = "$45.10"},
-            new ProductItem{ PreviewImage = "TEST IMAGE3", SubTitle = "Sub Title3", Title = "Title3", Description = "Description3", Uid = "UID3", Price = "$12.32"},
-            new ProductItem{ PreviewImage = "TEST IMAGE", SubTitle = "Sub Title", Title = "Title", Description = "Description", Uid = "UID", Price = "$99.95"},
-            new ProductItem{ PreviewImage = "TEST IMAGE2", SubTitle = "Sub Title2", Title = "Title2", Description = "Description2", Uid = "UID2", Price = "$45.10"},
-            new ProductItem{ PreviewImage = "TEST IMAGE3", SubTitle = "Sub Title3", Title = "Title3", Description = "Description3", Uid = "UID3", Price = "$12.32"},
-            new ProductItem{ PreviewImage = "TEST IMAGE2", SubTitle = "Sub Title2", Title = "Title2", Description = "Description2", Uid = "UID2", Price = "$45.10"},
-            new ProductItem{ PreviewImage = "TEST IMAGE3", SubTitle = "Sub Title3", Title = "Title3", Description = "Description3", Uid = "UID3", Price = "$12.32"},
-            new ProductItem{ PreviewImage = "TEST IMAGE", SubTitle = "Sub Title", Title = "Title", Description = "Description", Uid = "UID", Price = "$99.95"},
-            new ProductItem{ PreviewImage = "TEST IMAGE2", SubTitle = "Sub Title2", Title = "Title2", Description = "Description2", Uid = "UID2", Price = "$45.10"},
-            new ProductItem{ PreviewImage = "TEST IMAGE3", SubTitle = "Sub Title3", Title = "Title3", Description = "Description3", Uid = "UID3", Price = "$12.32"},
-            new ProductItem{ PreviewImage = "TEST IMAGE2", SubTitle = "Sub Title2", Title = "Title2", Description = "Description2", Uid = "UID2", Price = "$45.10"},
-            new ProductItem{ PreviewImage = "TEST IMAGE3", SubTitle = "Sub Title3", Title = "Title3", Description = "Description3", Uid = "UID3", Price = "$12.32"},
-            new ProductItem{ PreviewImage = "TEST IMAGE", SubTitle = "Sub Title", Title = "Title", Description = "Description", Uid = "UID", Price = "$99.95"},
-            new ProductItem{ PreviewImage = "TEST IMAGE2", SubTitle = "Sub Title2", Title = "Title2", Description = "Description2", Uid = "UID2", Price = "$45.10"},
-            new ProductItem{ PreviewImage = "TEST IMAGE3", SubTitle = "Sub Title3", Title = "Title3", Description = "Description3", Uid = "UID3", Price = "$12.32"}
-        });
+            SocialLinks = new()
+            {
+              new ()
+              {
+                 Name = "Facebook",
+                 Url = "https://www.facebook.com"
+              },
+              new ()
+              {
+                  Name = "Twitter",
+                  Url = "https://x.com"
+              },
+              new ()
+              {
+                  Name = "Twitch",
+                  Url = "https://www.twitch.com"
+              } 
+            },
+            Products = new List<ProductItem>
+            {
+                new (){ PreviewImage = "TEST IMAGE", SubTitle = "Sub Title", Title = "Title", Description = "Description", Uid = "UID", Price = "$99.95"},
+                new (){ PreviewImage = "TEST IMAGE2", SubTitle = "Sub Title2", Title = "Title2", Description = "Description2", Uid = "UID2", Price = "$45.10"},
+                new (){ PreviewImage = "TEST IMAGE3", SubTitle = "Sub Title3", Title = "Title3", Description = "Description3", Uid = "UID3", Price = "$12.32"},
+                new (){ PreviewImage = "TEST IMAGE", SubTitle = "Sub Title", Title = "Title", Description = "Description", Uid = "UID", Price = "$99.95"},
+                new (){ PreviewImage = "TEST IMAGE2", SubTitle = "Sub Title2", Title = "Title2", Description = "Description2", Uid = "UID2", Price = "$45.10"},
+                new (){ PreviewImage = "TEST IMAGE3", SubTitle = "Sub Title3", Title = "Title3", Description = "Description3", Uid = "UID3", Price = "$12.32"},
+                new (){ PreviewImage = "TEST IMAGE2", SubTitle = "Sub Title2", Title = "Title2", Description = "Description2", Uid = "UID2", Price = "$45.10"},
+                new (){ PreviewImage = "TEST IMAGE3", SubTitle = "Sub Title3", Title = "Title3", Description = "Description3", Uid = "UID3", Price = "$12.32"},
+                new (){ PreviewImage = "TEST IMAGE", SubTitle = "Sub Title", Title = "Title", Description = "Description", Uid = "UID", Price = "$99.95"},
+                new (){ PreviewImage = "TEST IMAGE2", SubTitle = "Sub Title2", Title = "Title2", Description = "Description2", Uid = "UID2", Price = "$45.10"},
+                new (){ PreviewImage = "TEST IMAGE3", SubTitle = "Sub Title3", Title = "Title3", Description = "Description3", Uid = "UID3", Price = "$12.32"},
+                new (){ PreviewImage = "TEST IMAGE2", SubTitle = "Sub Title2", Title = "Title2", Description = "Description2", Uid = "UID2", Price = "$45.10"},
+                new (){ PreviewImage = "TEST IMAGE3", SubTitle = "Sub Title3", Title = "Title3", Description = "Description3", Uid = "UID3", Price = "$12.32"},
+                new (){ PreviewImage = "TEST IMAGE", SubTitle = "Sub Title", Title = "Title", Description = "Description", Uid = "UID", Price = "$99.95"},
+                new (){ PreviewImage = "TEST IMAGE2", SubTitle = "Sub Title2", Title = "Title2", Description = "Description2", Uid = "UID2", Price = "$45.10"},
+                new (){ PreviewImage = "TEST IMAGE3", SubTitle = "Sub Title3", Title = "Title3", Description = "Description3", Uid = "UID3", Price = "$12.32"}
+            }
+        }  );
     } 
         
         

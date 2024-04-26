@@ -1,17 +1,24 @@
-@model ICollection<ProductItem>
+@model PublicModel
 
 @{
     ViewBag.Title = "title";
     Layout = "_LayoutProfile";
 }
+
+<div class="container-fluid">
+    <div class="cards">
+        <img width="200" height="200" src="https://img1.wsimg.com/isteam/stock/4331/:/rs=w:1080,h:812,cg:true,m/cr=w:1080,h:812"/>    
+    </div>  
+</div>
 <div class="cards">
-    <a class="btn" href="#" ><div class="card-links social-link">Test</div></a>
-    <div class="card-links"><button class="btn-social">Test</button></div>
-    <div class="card-links">Test</div>
-    <div class="card-links">Test</div>
+    @foreach (var item in Model.SocialLinks)
+    {
+        <a class="btn" href="@item.Url">
+            <div class="card-links social-link">@item.Name</div></a>
+    }
 </div>
 <div class="cards" id="imx0o">
-@foreach (var item in Model)
+@foreach (var item in Model.Products)
 {
     <a class="btn" href="https://google.com" alt="@item.Uid">
         <div class="card">
