@@ -4,39 +4,99 @@
     ViewBag.Title = "title";
     Layout = "_LayoutProfile";
 }
-
+<style>
+    .custom-bg-color{
+        background-color: @Model.Style.BackgroundColor;
+    }
+</style>
 <div class="container-fluid">
     <div class="cards">
         <img width="200" height="200" src="https://img1.wsimg.com/isteam/stock/4331/:/rs=w:1080,h:812,cg:true,m/cr=w:1080,h:812"/>    
     </div>  
 </div>
-<div class="cards">
-    @foreach (var item in Model.SocialLinks)
-    {
-        <a class="btn" href="@item.Url">
-            <div class="card-links social-link">@item.Name</div></a>
-    }
+<div class="cards" style="color: @Model.Style.BioFontColor; font-family: @Model.Style.BioFontType">
+    @Model.Bio.Body
 </div>
-<div class="cards" id="imx0o">
-@foreach (var item in Model.Products)
+@if (Model.SocialLinks.Count > 0)
 {
-    <a class="btn" href="https://google.com" alt="@item.Uid">
-        <div class="card">
-            <div class="card-header" style="background-image: url(@item.PreviewImage);">
-                <div style="right: 0; bottom: 0;position: absolute; margin: 3px; font-weight: bolder; font-size: larger;">@item.Price</div>
-            </div>
-            <div class="card-body">
-                <div class="card-title">
-                    @item.Title
-                </div>
-                <div class="card-sub-title">
-                    @item.SubTitle
-                </div>
-                <div class="card-desc">
-                    @item.Description
-                </div>
-            </div>
+    <div class="cards" >
+        <div class="card-link">
+            @foreach (var item in Model.SocialLinks)
+            {
+                <a class="btn" href="@item.Url">
+                    @if (string.IsNullOrWhiteSpace(item.Icon))
+                    {
+                        <div class="card-links social-link">@item.Name</div>
+                    }
+                    else
+                    {
+                        <div class="card-links social-link"><div class="align-self-md-auto" style="color: @Model.Style.SocialFontColor"> @Html.Raw(item.Icon)</div></div>
+                    }
+                
+                </a>
+            }
         </div>
-    </a> 
+    </div>
 }
-</div>
+@if (Model.Links.Count > 0)
+{
+    <div class="mx-auto w-75">
+        @foreach (var item in Model.Links)
+        {
+            <div class="d-flex flex-column">
+                
+                <div class="card-links-a v-48" style="border-color: @Model.Style.LinkBorderColor;">
+                    <a class="btn w-100" href="@item.Url" style="color: @Model.Style.LinkFontColor">@item.Name</a>
+                </div>
+            </div>
+        }
+    </div>    
+} 
+@if (Model.Products.Count > 0)
+{
+    <div class="cards" id="imx0o">
+        @foreach (var item in Model.Products)
+        {
+            <a class="btn" href="https://google.com" alt="@item.Uid">
+                <div class="card">
+                    <div class="card-header" style="background-image: url(@item.PreviewImage);">
+                        <div style="right: 0; bottom: 0;position: absolute; margin: 3px; font-weight: bolder; font-size: larger;">@item.Price</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">
+                            @item.Title
+                        </div>
+                        <div class="card-sub-title">
+                            @item.SubTitle
+                        </div>
+                        <div class="card-desc">
+                            @item.Description
+                        </div>
+                    </div>
+                </div>
+            </a> 
+        }
+    </div>   
+}
+
+@if (Model.YouTubeLinks.Count > 0)
+{
+    <div class="cards" id="imx0o">
+        @foreach (var item in Model.YouTubeLinks)
+        {
+                <div class="card">
+                    <div class="card-header-youtube">
+                          <iframe allowfullscreen="" frameborder="0" height="@item.Height" width="@item.Width" src="@item.Link" ></iframe>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">
+                            @item.Title
+                        </div> 
+                        <div class="card-desc">
+                            @item.Description
+                        </div>
+                    </div>
+                </div> 
+        }
+    </div>   
+}
