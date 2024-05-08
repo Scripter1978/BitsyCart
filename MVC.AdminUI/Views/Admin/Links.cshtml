@@ -1,0 +1,78 @@
+﻿@model System.Collections.Generic.List<MVC.AdminUI.Models.LinkView>
+
+@{
+    Layout = "_LayoutEmpty";
+}
+
+<div class="card replace-target">
+    <div class="card-body">
+        <form hx-post="@Url.RouteUrl("AddLink", new { User = "Henry" })"
+              hx-target="next .links-list"
+              hx-swap="beforeend"
+              hx-on::after-request="this.reset()">
+            <div class="form-group">
+                <input type="url" class="form-control" id="link" name="link"/>
+            </div>
+            <button type="submit" class="btn btn-primary mr-2">Submit</button>
+            <button class="btn btn-dark">Cancel</button>
+        </form>
+    </div>
+    <div class="card-body">
+        <div class="card">
+            <div class="card-body">
+                <div class="htmx-indicator" style="color:white;">Updating...</div>
+                <ul class="list-unstyled links-list" id="links-list">
+                    @foreach (var link in Model)
+                    {
+                        <li class="item sortable">
+                            <div class="row full-width">
+                                <div class="col-lg-10">
+                                    <span class="my-handle mdi mdi-drag-vertical"></span> @link.Link
+                                </div>
+                                <div class="col-sm-1">
+                                    <button class="" hx-disabled-elt="this" hx-delete='@Url.RouteUrl("Delete", new { id = link.Id })' hx-target="closest li" hx-swap="delete">
+                                        <span class="my-handle mdi mdi-delete"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        htmx.onLoad(function(content) {
+        
+        var linksList = document.querySelectorAll('.links-list');
+        for (var i = 0; i < linksList.length; i++) {
+            var sortable = linksList[i];
+            Sortable.create(sortable, {
+            handle: ".my-handle",
+            filter: ".htmx-indicator",
+            onEnd: function (evt) {
+            var sortedIDs = [];
+                for (var i = 0; i < evt.to.childNodes.length; i++) {
+                    if (evt.to.childNodes[i].localName == 'li') {
+                        sortedIDs.push(evt.to.childNodes[i].id);
+                    }
+                }
+                htmx.ajax('POST', '@Url.RouteUrl("Sort")', {
+                    target: '#section-list',
+                    swap: 'none',
+                    values: {
+                        sections: JSON.stringify(sortedIDs),
+                    },
+                    headers: {
+                        'x-csrf-token': '',
+                    },
+                });
+            }
+        });  
+        }      
+    });
+    </script>
+}

@@ -1,0 +1,18 @@
+﻿@model BioView
+
+@{
+    Layout = "_LayoutEmpty";
+}
+<div class="card replace-target">
+    <div class="card-body">
+        <form hx-put="@Url.RouteUrl("Bio", new { User="Henry" })" 
+              hx-target=".replace-target" 
+              hx-swap="outerHTML">
+            <div class="form-group">
+                <textarea class="form-control" id="bio" name="bio" rows="4">@Model.Bio</textarea>
+            </div>
+            <button type="submit" class="btn btn-primary mr-2">Submit</button>
+            <button class="btn btn-dark">Cancel</button>
+        </form>
+</div>
+</div>
