@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="~/css/materialdesignicons.min.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/MVC.AdminUI.styles.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/cropper.min.css" asp-append-version="true"/>
+    
 </head>
 <body class="bg-dark">
 <div class="container-scroller">
@@ -107,20 +109,24 @@
                 </button>
             </li>
             <li class="nav-item menu-items">
-                <a class="nav-link" href="pages/tables/basic-table.html">
+                <button class="nav-link btn-side" hx-get="@Url.RouteUrl("Socials", new { User="Henry" })"
+                        hx-target=".pb-3"
+                        hx-swap="innerHTML">
                     <span class="menu-icon">
-                        <i class="mdi mdi-table-large"></i>
+                        <i class="mdi mdi-playlist-play"></i>
                     </span>
-                    <span class="menu-title">Tables</span>
-                </a>
+                    <span class="menu-title">Social Icons</span>
+                </button>
             </li>
             <li class="nav-item menu-items">
-                <a class="nav-link" href="pages/charts/chartjs.html">
+                <button class="nav-link btn-side" hx-get="@Url.RouteUrl("Socials", new { User="Henry" })"
+                        hx-target=".pb-3"
+                        hx-swap="innerHTML">
                     <span class="menu-icon">
-                        <i class="mdi mdi-chart-bar"></i>
+                        <i class="mdi mdi-playlist-play"></i>
                     </span>
-                    <span class="menu-title">Charts</span>
-                </a>
+                    <span class="menu-title">Products</span>
+                </button>
             </li>
             <li class="nav-item menu-items">
                 <a class="nav-link" href="pages/icons/mdi.html">
@@ -380,6 +386,8 @@
 <script src="~/js/vendor.bundle.base.js"></script>
 <script src="~/js/Sortable.js"></script>
 <script src="https://unpkg.com/htmx.org@1.9.12" integrity="sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
+<script src="~/js/cropper.min.js"></script>
 @await RenderSectionAsync("Scripts", required: false)
 
 </body>

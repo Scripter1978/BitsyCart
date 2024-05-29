@@ -1,4 +1,4 @@
-﻿namespace MVC.UI.Models;
+﻿namespace Infrastructure.Models;
 
 public class PublicModel
 {
@@ -8,4 +8,5 @@ public class PublicModel
     public BioModel Bio { get; set; } = new ();
     public StyleModel Style { get; set; } = new ();
     public List<YouTubeLink> YouTubeLinks { get; set; } = new ();
+    public string Image { get; set; }
 }

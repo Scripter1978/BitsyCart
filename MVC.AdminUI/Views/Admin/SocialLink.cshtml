@@ -1,0 +1,9 @@
+﻿@model Infrastructure.Models.SocialLink
+
+@{
+    Layout = "_LayoutEmpty";
+}
+
+<li>
+    <span><a target="_blank" href="@Model.Url">@Html.Raw(Model.Icon) </a></span>
+</li>

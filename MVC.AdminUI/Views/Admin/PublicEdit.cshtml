@@ -1,0 +1,515 @@
+﻿@model Infrastructure.Models.PublicModel
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_LayoutAdmin";
+}
+<style>
+    .container {
+        margin: 20px auto;
+        max-width: 640px;
+    }
+
+    img {
+        max-width: 100%;
+    }
+
+    .cropper-view-box,
+    .cropper-face {
+        border-radius: 50%;
+    }
+
+    /* The css styles for `outline` do not follow `border-radius` on iOS/Safari (#979). */
+    .cropper-view-box {
+        outline: 0;
+        box-shadow: 0 0 0 1px #39f;
+    }
+</style>
+<div class="cards" style="padding: 5px; margin: 5px;">
+    <fieldset style="border-style: dotted; border-color: white; border-width: 1px; padding: 10px;">
+        <legend align="center" style="float: none; width: unset; font-size: 10px;">
+            Add/Edit Profile Image
+        </legend>
+        @* <div style="width: fit-content; float: left;" class="dropdown"> *@
+        @*     <button class="btn" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> *@
+        @*         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16"> *@
+        @*             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/> *@
+        @*             <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/> *@
+        @*         </svg> *@
+        @*     </button> *@
+        @*     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"> *@
+        @*         <div> *@
+        @*             <img id="image" width="200" height="200" src="@Model.Image"/> *@
+        @*         </div> *@
+        @*         <p> *@
+        @*             <button type="button" id="button">Crop</button> *@
+        @*         </p> *@
+        @*     </div> *@
+        @* </div> *@
+
+        <div id="result" style="width: 200px; height: 200px; margin: 0 auto;">
+            <label class="label" data-toggle="tooltip" title="Change your avatar">
+                <img class="rounded" id="avatar" src="@Model.Image" alt="avatar">
+                <input type="file" class="sr-only" id="input" name="image" accept="image/*">
+            </label>
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+            </div>
+            <div class="alert" role="alert"></div>
+        </div>
+    </fieldset>
+
+    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel">Crop the image</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="img-container">
+                        <img id="image" width="200" height="200" src="@Model.Image">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="crop">Crop</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
+<div class="cards" style="padding: 5px; margin: 5px; color: @Model.Style.BioFontColor; font-family: @Model.Style.BioFontType">
+    <fieldset id="biofield" style="border-style: dotted; border-color: white; border-width: 1px; padding: 10px;">
+        <legend align="center" style="float: none; width: unset; font-size: 10px;">
+            Add/Edit Bio
+        </legend>
+        <input type="text" title="Bio Text" placeholder="Enter Bio Here" maxlength="256" class="form-control" id="bio" >@Model.Bio.Body</input>
+       
+    </fieldset>
+</div> 
+<div class="cards" style="padding: 5px; margin: 5px;">
+    <fieldset style="border-style: dotted; border-color: white; border-width: 1px; padding: 10px;">
+        <legend align="center" style="float: none; width: unset; font-size: 10px;">
+            Add/Edit Social Links
+        </legend>
+        <div style="width: fit-content; float: left;" class="dropdown">
+            <button class="btn" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                </svg>
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <div id="socialsearch">
+                    <input placeholder="Type Name of Socialmedia Site" _="on input
+                      show <.results>div/> in closest <div/>
+                     when its @@id contains my value.toLowerCase() and my value.length > 0
+                  "/>
+                    <div class="results">
+                        <div id="xtwitter" style="display: none;">
+                            <span title="X (formerly Twitter)"><svg viewBox="0 0 24 24" aria-hidden="true" fill="white" class="" height="24" width="24"><g><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></g></svg></span>
+                            <input name="socialinput" type="text" id="twittername" placeholder="Enter X username"/>
+                        </div>
+                        <div id="linkedin" style="display: none;">
+                            <span title="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" data-supported-dps="24x24" fill="currentColor" class="mercado-match" width="24" height="24" focusable="false"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19a.66.66 0 000 .14V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"></path></svg></span>
+                            <input name="socialinput" type="text" id="linkedinname" placeholder="Enter LinkedIn username"/>
+                        </div>
+                        <div id="facebook" style="display: none;">
+                            <span title="Facebook"><svg viewBox="0 0 36 36" class="" style="" fill="white" height="24" width="24"><path d="M20.181 35.87C29.094 34.791 36 27.202 36 18c0-9.941-8.059-18-18-18S0 8.059 0 18c0 8.442 5.811 15.526 13.652 17.471L14 34h5.5l.681 1.87Z"></path><path style="fill: black;" d="M13.651 35.471v-11.97H9.936V18h3.715v-2.37c0-6.127 2.772-8.964 8.784-8.964 1.138 0 3.103.223 3.91.446v4.983c-.425-.043-1.167-.065-2.081-.065-2.952 0-4.09 1.116-4.09 4.025V18h5.883l-1.008 5.5h-4.867v12.37a18.183 18.183 0 0 1-6.53-.399Z"></path></svg></span>
+                            <input name="socialinput" type="text" id="facebookname" placeholder="Enter Facebook username"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="cards">
+            <div class="card-link sociallinks">
+                @foreach (var item in Model.SocialLinks)
+                {
+
+                    var linkid = item.Name.ToLower() + "link";
+                    <a id="@linkid" class="btn" href="@item.Url">
+                        <div class="card-links social-link">
+                            <div class="align-self-md-auto" style="color: @Model.Style.SocialFontColor">
+                                @Html.Raw(item.Icon)
+                            </div>
+                        </div>
+                    </a>
+                    var inputText = item.Name.ToLower() + "name";
+                    <script>
+                const inputAssign = document.getElementById('@inputText');
+                inputAssign.value = '@item.UserName';
+            </script>
+                }
+            </div>
+        </div>
+    </fieldset>
+</div>
+<div class="cards" style="padding: 5px; margin: 5px;">
+<fieldset style="border-style: dotted; border-color: white; border-width: 1px; padding: 10px;">
+    <legend align="center" style="float: none; width: unset; font-size: 10px;">
+        Add/Edit Links
+    </legend>
+    <div style="width: fit-content; float: left;" class="dropdown">
+        <button class="btn" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+            </svg>
+        </button>
+        <div class="dropdown-menu" style="padding: 5px;" aria-labelledby="dropdownMenuButton">
+            <div>
+                <input type="text" class="form-control" id="urlname" placeholder="Enter Display Text"/>
+            </div>
+            <div>
+                <input type="url" class="form-control" id="urllink" placeholder="Enter Link"/>
+            </div>
+
+            <div>
+                <button type="button" class="btn" id="urllinkbtn">Save</button>
+            </div>
+        </div>
+    </div>
+<div class="mx-auto w-75 urllinks">
+    
+    @foreach (var item in Model.Links)
+    {
+        <div class="d-flex flex-column">
+
+            <div class="card-links-a v-48" style="border-color: @Model.Style.LinkBorderColor;">
+                <a class="btn w-100" href="@item.Url" style="color: @Model.Style.LinkFontColor">@item.Name</a>
+            </div>
+        </div>
+    }
+</div>
+</fieldset>
+</div>
+@if (Model.Products.Count > 0)
+{
+<div class="cards" id="imx0o">
+    @foreach (var item in Model.Products)
+    {
+    <a class="btn" href="https://google.com" alt="@item.Uid">
+        <div class="card">
+            <div class="card-header" style="background-image: url(@item.PreviewImage);">
+                <div style="right: 0; bottom: 0;position: absolute; margin: 3px; font-weight: bolder; font-size: larger;">@item.Price</div>
+            </div>
+            <div class="card-body">
+                <div class="card-title">
+                    @item.Title
+                </div>
+                <div class="card-sub-title">
+                    @item.SubTitle
+                </div>
+                <div class="card-desc">
+                    @item.Description
+                </div>
+            </div>
+        </div>
+    </a>
+    }
+</div>
+}
+
+@if (Model.YouTubeLinks.Count > 0)
+{
+<div class="cards" id="imx0o">
+    @foreach (var item in Model.YouTubeLinks)
+    {
+    <div class="card">
+        <div class="card-header-youtube">
+            <iframe allowfullscreen="" frameborder="0" height="@item.Height" width="@item.Width" src="@item.Link" ></iframe>
+        </div>
+        <div class="card-body">
+            <div class="card-title">
+                @item.Title
+            </div>
+            <div class="card-desc">
+                @item.Description
+            </div>
+        </div>
+    </div>
+    }
+</div>
+}
+
+@section Scripts
+{
+    <script>
+        const input = document.querySelectorAll('input[name="socialinput"]');
+        for (let i = 0; i < input.length; i++) {
+            input[i].addEventListener("change", submitsocialname);
+        } 
+        const sociallinks = document.querySelector('.sociallinks');
+        const bioText = document.getElementById('bio');
+        bioText.addEventListener("change", submitbio);
+        const urllink = document.getElementById('urllink');
+        const urllinkbtn = document.getElementById('urllinkbtn');
+        const urlname = document.getElementById('urlname');
+        urllinkbtn.addEventListener("click", submiturllink);
+        const urllinks = document.querySelector('.urllinks');
+        
+        
+        
+
+        bioText.addEventListener("change", submitbio);
+        function submitbio(e) {
+            console.log(e.target.value);
+
+            if (isNullOrWhiteSpace(e.target.value)) {
+                return;
+            }
+
+            var data = new FormData();
+            data.append('Body', e.target.value);
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '@Url.RouteUrl("AddBio")', true);
+            xhr.onload = function (response) {
+              if (response.target.status === 200) {
+                  let bioBorder = bioText.style.borderColor;
+                  bioText.style.borderColor = "green";
+                  const biofield = document.getElementById('biofield');
+                  let biofieldBorder = biofield.style.borderColor;
+                    biofield.style.borderColor = "green";
+                  const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
+                  const resetBorderColor = async () => {
+                      await sleep(500)
+                      bioText.style.borderColor = bioBorder;
+                        biofield.style.borderColor = biofieldBorder;
+                  }
+                  resetBorderColor();
+                console.log(response.target.response);
+                return;
+              }
+
+                let bioBorder = bioText.style.borderColor;
+                bioText.style.borderColor = "red";
+                const biofield = document.getElementById('biofield');
+                let biofieldBorder = biofield.style.borderColor;
+                biofield.style.borderColor = "red";
+                const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
+                const resetBorderColor = async () => {
+                    await sleep(500)
+                    bioText.style.borderColor = bioBorder;
+                    biofield.style.borderColor = biofieldBorder;
+                    bioText.focus();
+                }
+                resetBorderColor();
+                console.log(response.target.response);
+            };
+            xhr.send(data);
+        }
+
+        function submiturllink(e) {
+            console.log(urllink.value);
+
+            if (isNullOrWhiteSpace(urllink.value)) {
+                return;
+            }
+
+            var data = new FormData();
+            data.append('Name', urlname.value);
+            data.append('Url', urllink.value);
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '@Url.RouteUrl("AddLink")', true);
+            xhr.onload = function () {
+                // do something to response
+                urllinks.insertAdjacentHTML('beforeend', this.responseText);
+            };
+            xhr.send(data);
+        }
+        
+    function submitsocialname(e) {
+        console.log(e.target.id.replace("name", ""));
+
+        if (isNullOrWhiteSpace(e.target.value)) {
+            var existingSocial = e.target.id.replace("name", "");
+            var removeSocial = document.querySelector(`#${existingSocial}link`);
+            if (removeSocial) {
+                removeSocial.remove();
+            }
+            return;
+        }
+
+        var data = new FormData();
+        data.append('UserName', e.target.value);
+        data.append('Name', e.target.id.replace("name", ""));
+        data.append('Icon', document.querySelector(`#${e.target.id}`).parentElement.querySelector("span").innerHTML);
+        data.append('Url', `https://www.${e.target.id.replace("name", "")}.com/${e.target.value}`);
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '@Url.RouteUrl("AddSocialLink")', true);
+        xhr.onload = function () {
+            // do something to response
+            var idCheck = e.target.id.replace("name", "");
+            var sociallinkCheck = document.querySelector(`#${idCheck}link`);
+            if (sociallinkCheck) {
+                sociallinkCheck.insertAdjacentHTML('beforebegin', this.responseText);
+                sociallinkCheck.remove();
+            }else{
+                console.log(this.responseText);
+                sociallinks.insertAdjacentHTML('beforeend', this.responseText);
+            }
+        };
+        xhr.send(data); 
+    }
+    function isNullOrWhiteSpace(str){
+        return !str || str.length === 0 || /^\s*$/.test(str);
+    }
+    function responsehandler(e){
+        console.log(e)
+    }
+
+
+        function getRoundedCanvas(sourceCanvas) {
+            var canvas = document.createElement('canvas');
+            var context = canvas.getContext('2d');
+            var width = sourceCanvas.width;
+            var height = sourceCanvas.height;
+
+            canvas.width = width;
+            canvas.height = height;
+            context.imageSmoothingEnabled = true;
+            context.drawImage(sourceCanvas, 0, 0, width, height);
+            context.globalCompositeOperation = 'destination-in';
+            context.beginPath();
+            context.arc(width / 2, height / 2, Math.min(width, height) / 2, 0, 2 * Math.PI, true);
+            context.fill();
+            return canvas;
+        }
+
+
+
+        window.addEventListener('DOMContentLoaded', function () {
+            var avatar = document.getElementById('avatar');
+            var image = document.getElementById('image');
+            var input = document.getElementById('input');
+            var $progress = $('.progress');
+            var $progressBar = $('.progress-bar');
+            var $alert = $('.alert');
+            var $modal = $('#modal');
+            var cropper;
+            $progress.hide();
+            $('[data-toggle="tooltip"]').tooltip();
+
+            input.addEventListener('change', function (e) {
+                var files = e.target.files;
+                var done = function (url) {
+                    input.value = '';
+                    image.src = url;
+                    $alert.hide();
+                    $modal.modal('show');
+                };
+                var reader;
+                var file;
+                var url;
+
+                if (files && files.length > 0) {
+                    file = files[0];
+
+                    if (URL) {
+                        done(URL.createObjectURL(file));
+                    } else if (FileReader) {
+                        reader = new FileReader();
+                        reader.onload = function (e) {
+                            done(reader.result);
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                }
+            });
+
+            $modal.on('shown.bs.modal', function () {
+                cropper = new Cropper(image, {
+                    dragMode: 'move',
+                    aspectRatio: 1,
+                    viewMode: 1,
+                    restore: false,
+                    guides: false,
+                    center: false,
+                    cropBoxMovable: false,
+                    cropBoxResizable: false,
+                    toggleDragModeOnDblclick: false,
+                    ready: function () {
+                        croppable = true;
+                    },
+                });
+            }).on('hidden.bs.modal', function () {
+                cropper.destroy();
+                cropper = null;
+            });
+            function removeAlert() {
+                $alert.fadeOut();
+            }
+            document.getElementById('crop').addEventListener('click', function () {
+                var initialAvatarURL;
+                var canvas;
+                var roundedCanvas;
+                var roundedImage;
+
+                $modal.modal('hide');
+
+                if (cropper) {
+                    canvas = cropper.getCroppedCanvas({
+                        width: 160,
+                        height: 160,
+                    });
+                    roundedCanvas = getRoundedCanvas(canvas);
+                    initialAvatarURL = avatar.src;
+                    avatar.src = roundedCanvas.toDataURL();
+                    $progress.show();
+                    $alert.removeClass('alert-success alert-warning');
+                    roundedCanvas.toBlob(function (blob) {
+                        var formData = new FormData();
+
+                        formData.append('avatar', blob, 'avatar.png');
+                        $.ajax('@Url.RouteUrl("AddAvatar")', {
+                            method: 'POST',
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+
+                            xhr: function () {
+                                var xhr = new XMLHttpRequest();
+
+                                xhr.upload.onprogress = function (e) {
+                                    var percent = '0';
+                                    var percentage = '0%';
+
+                                    if (e.lengthComputable) {
+                                        percent = Math.round((e.loaded / e.total) * 100);
+                                        percentage = percent + '%';
+                                        $progressBar.width(percentage).attr('aria-valuenow', percent).text(percentage);
+                                    }
+                                };
+
+                                return xhr;
+                            },
+
+                            success: function () {
+                                $alert.show().addClass('alert-success').text('Upload success');
+                            },
+
+                            error: function () {
+                                avatar.src = initialAvatarURL;
+                                $alert.show().addClass('alert-warning').text('Upload error');
+                            },
+
+                            complete: function () {
+                                $progress.hide();
+                                setTimeout(removeAlert, 1500);
+                            },
+                        });
+                    });
+                }
+            });
+        });
+        
+        
+</script>
+}

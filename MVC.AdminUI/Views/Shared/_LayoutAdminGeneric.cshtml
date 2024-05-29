@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>@ViewData["Title"] - MVC.AdminUI</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="~/css/materialdesignicons.min.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/profile.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/MVC.AdminUI.styles.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/cropper.min.css" asp-append-version="true"/>
+</head>
+<body>
+<header>
+    
+</header>
+<div class="main-panel">
+<div class="content-wrapper">
+    <main role="main" class="pb-3">
+        @RenderBody()
+    </main>
+
+</div>
+</div>
+
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+<script src="~/js/hoverable-collapse.js"></script>
+<script src="~/js/settings.js"></script>
+<script src="~/js/vendor.bundle.base.js"></script>
+<script src="~/js/Sortable.js"></script>
+<script src="https://unpkg.com/htmx.org@1.9.12" integrity="sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
+<script src="~/js/cropper.min.js"></script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

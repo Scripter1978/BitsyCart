@@ -1,4 +1,4 @@
-namespace MVC.UI.Models;
+namespace Infrastructure.Models;
 
 public class ProductItem
 {
