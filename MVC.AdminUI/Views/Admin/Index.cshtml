@@ -83,18 +83,13 @@
                 @foreach (var item in Model.SocialLinks)
                 {
                     var linkid = item.Name.ToLower() + "link"; 
-                    <div id="@linkid" style="width: 40px; height: 40px; display: inline-block;">
-                        <button onclick="deleteSocialLink(this)" class="btn deleteSocial" type="button" id="@item.Id" style="position: absolute; ">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
-                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z"/>
-                            </svg>
-                        </button>
+                    
+                    <div id="@linkid" data-socialId="@item.Id" style="display: inline-block;" onclick="addSocialModal('@item.Name.ToLower()', '@item.UserName', '@item.Id');">
                         <div title="@item.Url" class="card-links social-link">
-
                             <div class="align-self-md-auto" style="color: @Model.Style.SocialFontColor">
                                 @Html.Raw(item.Icon)
                             </div>
-                        </div>
+                        </div> 
                     </div>
                 }
             </div>
@@ -138,14 +133,9 @@
 
             <div class="modal-body">
                 <div id="socialsearch">
-
-                    <div>
+                    <div style="padding-bottom: 3vh;">
                         <input id="SearchSocial" onkeyup="socialFilter()" placeholder="Type Name of Socialmedia Site" />
-                    </div>
-
-                    <div>
-                        <button type="button" class="btn" id="socialbtn">Save</button>
-                    </div>
+                    </div> 
                     <div class="results">
                         <div class="socialIcons" id="xtwitter" style="display: none;">
                             <span title="X (formerly Twitter)">
@@ -177,6 +167,7 @@
                 </div>
             </div>
             <div class="modal-footer">
+                <button type="button" id="DeleteSocial" style="display: none;" class="btn btn-danger">Delete Social</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 <button type="button" id="CreateSocial" class="btn btn-primary">Add Social</button>
             </div>
@@ -266,9 +257,53 @@
 {
     <script>
 
-        function socialFilter() {
+        const deleteSocial = document.getElementById('DeleteSocial');
+
+        deleteSocial.addEventListener("mousedown", deleteSocialLink);
+        function deleteSocialLink(e) {
+            let data = new FormData();
+            console.log(deleteSocial.dataset.socialid);
+            data.append('id', '' + deleteSocial.dataset.socialid.toString() + '');
+
+            let xhr = new XMLHttpRequest();
+            
+            var deleteUrl = '@Url.RouteUrl("DeleteSocial")' + '/' + deleteSocial.dataset.socialid.toString() + '';
+            xhr.open('DELETE', deleteUrl, true);
+            xhr.onload = function (response) {
+                if (response.target.status === 204) {
+                    let classId = e.id + "_link";
+                    const sociallinks = document.getElementsByClassName(classId);
+                    for (let i = 0; i < sociallinks.length; i++) {
+                        sociallinks[i].remove();
+                    }
+
+                    return;
+                }
+                console.log(response.target.response);
+            };
+            xhr.send(data);
+        }
+        function addSocialModal(social, userName, socialId) { 
+            let socialModal = new bootstrap.Modal(document.getElementById('AddSocialModal'), {
+                focus: true
+            });
+            socialModal.show();
+            deleteSocial.style = "display: block";
+            deleteSocial.dataset.socialid = socialId;
+            socialFilter(social, userName);
+        }
+
+        function socialFilter(social, userName) {
             let input, filter, cards, i;
             input = document.getElementById("SearchSocial");
+            if (!isNullOrWhiteSpace(social)){ 
+                input.value = social;
+            }
+            if (!isNullOrWhiteSpace(userName)){
+                var socialInputId = social+"name";
+                var socialInput = document.getElementById(socialInputId);
+                socialInput.value = userName;
+            }
             filter = input.value.toUpperCase(); 
             cards = document.getElementsByClassName("socialIcons");
             for (i = 0; i < cards.length; i++) {
@@ -332,35 +367,11 @@
         for (let i = 0; i < deletelink.length; i++) {
             deletelink[i].addEventListener("click", deleteLink);
         }
-        const deleteSocial = document.querySelectorAll('.deleteSocial');
-
-        for (let i = 0; i < deleteSocial.length; i++) {
-            deleteSocial[i].addEventListener("click", deleteSocialLink);
-        }
-
-        function deleteSocialLink(e) {
-            let data = new FormData();
-            data.append('Body', e.id);
-
-            let xhr = new XMLHttpRequest();
-            xhr.open('PATCH', '@Url.RouteUrl("DeleteSocial")', true);
-            xhr.onload = function (response) {
-                if (response.target.status === 204) {
-                    let classId = e.id + "_link";
-                    const sociallinks = document.getElementsByClassName(classId);
-                    for (let i = 0; i < sociallinks.length; i++) {
-                        sociallinks[i].remove();
-                    }
-
-                    return;
-                }
-                console.log(response.target.response);
-            };
-            xhr.send(data);
-        }
+        
+        
         function deleteLink(e){
             let data = new FormData();
-            data.append('Body', e.id);
+            data.append('id', e.id);
             let xhr = new XMLHttpRequest();
             xhr.open('PATCH', '@Url.RouteUrl("DeleteLink")', true);
             xhr.onload = function (response) {
@@ -615,5 +626,6 @@
         });
     });
  
+    
     </script>
 }
